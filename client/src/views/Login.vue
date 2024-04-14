@@ -52,9 +52,40 @@ export default {
         const response = await fetch(url, requestOptions);
         const result = await response.json();
         if (response.ok) {
+          // Set cookies in document.cookie
+          // document.cookie = `accessToken=${result.accessToken}; path=/`;
+          // document.cookie = `refreshToken=${result.refreshToken}; path=/`;
+
+          // // Retrieve cookies from document.cookie
+          // const cookies = document.cookie.split(';');
+          // let accessToken = '';
+          // let refreshToken = '';
+
+          // cookies.forEach(cookie => {
+          //   const [name, value] = cookie.trim().split('=');
+          //   if (name === 'accessToken') {
+          //     accessToken = value;
+          //   } else if (name === 'refreshToken') {
+          //     refreshToken = value;
+          //   }
+          // });
+
+          this.user = {
+            username: result.user.name,
+            userId: result.user.userId,
+            // accessToken: accessToken,
+            // refreshToken: refreshToken
+          };
+          // localStorage.setItem('user', JSON.stringify(this.user));
+          useUserStore().setUser(this.user);
+          // useUserStore().setUser({ username: result.user.name });
+
           const redirectPath = this.$route.query.redirect || '/protected';
-          useUserStore().setName(result.user.name); //! Save user's name in Pinia store
-          this.$router.push(redirectPath);
+          // this.$router.push(redirectPath);
+          this.$router.push(redirectPath).catch(() => {
+            // Handle navigation errors, e.g., invalid route
+            this.$router.push('/protected');
+          });
         } else {
           const redirectPath = this.$route.query.redirect || '/failed';
           this.$router.push(redirectPath);
@@ -80,7 +111,7 @@ export default {
   // display: flex;
   // justify-content: center;
   // margin: auto;
-
+  @include inTheMiddle;
   .form {
     width: 384px;
     height: 520px;
@@ -90,6 +121,7 @@ export default {
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
+    @include softForm;
     h1 {
       text-align: center;
     }
@@ -111,7 +143,7 @@ export default {
       font-weight: 500;
       font-size: 20px;
       letter-spacing: 1px;
-
+      text-transform: uppercase;
       span {
         display: flex;
         justify-content: center;

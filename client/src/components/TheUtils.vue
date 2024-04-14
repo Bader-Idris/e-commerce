@@ -1,6 +1,6 @@
 <template>
   <div class="utils">
-    <p v-if="isLoggedIn">Hello {{ userStore.name }}</p>
+    <p v-if="isLoggedIn">Hello {{ userStore.user.username }}</p>
     <AppLink v-if="!isLoggedIn" to="/register">Register</AppLink>
     <AppLink v-if="!isLoggedIn" to="/login">Login</AppLink>
     <button v-if="isLoggedIn" @click="logout">Logout</button>
@@ -18,32 +18,51 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      return this.userStore.name !== '';
+      const user = JSON.parse(localStorage.getItem('user')) || {};
+      user && typeof user === 'object' ? user.username !== '' : false;
+      //! instead of user.name and userStore.user
+      // return this.userStore.name !== '';
     }
   },
   methods: {
-    logout() {
-      this.userStore.clearName(); // Clear the user's name in Pinia store
-      //! You can also add any additional logout logic here, such as clearing cookies
+    async logout() {
+      const url = '/api/v1/auth/logout';
+      const myHeaders = new Headers();
+      myHeaders.append('Content-Type', 'application/json');
+      myHeaders.append('Cookie', `accessToken=${this.accessToken}; refreshToken=${this.refreshToken}`);
+
+      const requestOptions = {
+        method: 'DELETE',
+        headers: myHeaders,
+        body: JSON.stringify({ userId: this.userId }),
+        redirect: 'follow'
+      };
+
+      try {
+        const response = await fetch(url, requestOptions);
+        const result = await response.text();
+        // Clear user data after successful logout
+        this.clearUserData();
+        this.userStore.clearUser();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    clearUserData() {
+      localStorage.removeItem('user');
     }
   },
   mounted() {
-    this.username = localStorage.getItem('username') || '';
-
-    const checkCookiesAndName = () => {
-      if ((!document.cookie.includes('refreshToken') || !document.cookie.includes('accessToken')) && this.username !== '') {
-        this.userStore.clearName();
-        localStorage.removeItem('username');
-        this.username = '';
-      }
-    };
-
-    // Check cookies and user's name on component mount and when cookies change
-    checkCookiesAndName();
+    this.user = JSON.parse(localStorage.getItem('user')) || {};
 
     this.$watch(
       () => document.cookie,
-      checkCookiesAndName
+      () => {
+        if (!document.cookie.includes('refreshToken') || !document.cookie.includes('accessToken')) {
+          this.user = {};
+          localStorage.removeItem('user');
+        }
+      }
     );
   }
 };
