@@ -17,65 +17,67 @@
     </form>
   </div>
 </template>
-<script>
+
+<script setup>// converted from Options API to Composition API
 import CustomLoader from "@/components/CustomLoader.vue";
 import { useUserStore } from '@/stores/UserNameStore';
+import { ref } from 'vue';
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
-export default {
-  data(){
-    return {
-      email: '',
-      password: '',
-      loading: false
-    }
-  },
-  methods: {
-    async login() {
-      this.loading = true;
+const email = ref('');
+const password = ref('');
+const loading = ref(false);
 
-      const url = '/api/v1/auth/login';
-      const data = {
-        email: this.email,
-        password: this.password
+const login = async () => {
+  loading.value = true;
+
+  const url = '/api/v1/auth/login';
+  const data = {
+    email: email.value,
+    password: password.value
+  };
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: JSON.stringify(data),
+    redirect: "follow"
+  };
+
+  try {
+    const response = await fetch(url, requestOptions);
+    const result = await response.json();
+    if (response.ok) {
+      const user = {
+        username: result.user.name,
+        userId: result.user.userId,
+        role: result.user.role
       };
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      useUserStore().setUser(user);
 
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: JSON.stringify(data),
-        redirect: "follow"
-      };
-
-      try {
-        const response = await fetch(url, requestOptions);
-        const result = await response.json();
-        if (response.ok) {
-          const user = {
-            username: result.user.name,
-            userId: result.user.userId,
-            role: result.user.role
-          };
-          useUserStore().setUser(user);
-
-          const redirectPath = this.$route.query.redirect || '/protected';
-          this.$router.push(redirectPath);
-        } else {
-          const redirectPath = this.$route.query.redirect || '/failed';
-          this.$router.push(redirectPath);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.loading = false;
-      }
+      // Display success toast message
+      toast("Successfully logged in", {
+        theme: "auto",
+        type: "success",
+        position: "top-center",
+        dangerouslyHTMLString: true
+      });
+      const redirectPath = $route.query.redirect || '/protected';
+      $router.push(redirectPath);
+    } else {
+      const redirectPath = $route.query.redirect || '/failed';
+      $router.push(redirectPath);
     }
-  },
-  components: {
-    CustomLoader
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
   }
-}
+};
+
 </script>
 
 <style lang="scss">

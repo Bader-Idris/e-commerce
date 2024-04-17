@@ -7,60 +7,49 @@
   </div>
 </template>
 
-<script>
+<script setup>// converted from Options API to Composition API
 import { useUserStore } from '@/stores/UserNameStore';
 import { useRouter } from 'vue-router';
 import { computed } from 'vue';
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
-export default {
-  setup() {
-    const userStore = useUserStore();
-    const isLoggedIn = computed(() => userStore.isLoggedIn);
+const userStore = useUserStore();
+const isLoggedIn = computed(() => userStore.isLoggedIn);
 
-    const logout = async () => {
-      const url = '/api/v1/auth/logout';
-      const myHeaders = new Headers();
-      myHeaders.append('Content-Type', 'application/json');
-      const requestOptions = {
-        method: 'DELETE',
-        headers: myHeaders,
-        body: JSON.stringify({ userId: userStore.user.userId }),
-        redirect: 'follow'
-      };
+const logout = async () => {
+  const url = '/api/v1/auth/logout';
+  const myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
+  const requestOptions = {
+    method: 'DELETE',
+    headers: myHeaders,
+    body: JSON.stringify({ userId: userStore.user.userId }),
+    redirect: 'follow'
+  };
 
-      try {
-        const response = await fetch(url, requestOptions);
-        const result = await response.text();
-        if (response.ok) {
-          userStore.clearUser();
-          // this.$router.push('/login');
-        } else {
-          console.error('Logout failed:', result);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    return {
-      userStore,
-      isLoggedIn,
-      logout,
-    };
-  },
-
-  data() {
-    return {
-    };
-  },
-  computed: {
-  },
-  methods: {
-  },
-  mounted() {
-    this.user = JSON.parse(localStorage.getItem('user')) || {};
+  try {
+    const response = await fetch(url, requestOptions);
+    const result = await response.text();
+    if (response.ok) {
+      userStore.clearUser();
+      toast("Successfully logged out", {
+        theme: "auto",
+        type: "success",
+        position: "top-center",
+        dangerouslyHTMLString: true
+      });
+      // router.push('/login'); // You can use the router directly
+    } else {
+      console.error('Logout failed:', result);
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
+
+// Initialize user from localStorage
+userStore.user = JSON.parse(localStorage.getItem('user')) || {};
 </script>
 
 <style lang="scss" scoped>
