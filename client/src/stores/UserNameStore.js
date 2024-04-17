@@ -3,24 +3,24 @@ import { defineStore } from "pinia";
 export const useUserStore = defineStore(
   "user",
   {
-    state: () => ({
+    state: () => ({//! reactive property
+      // user: null,
       user: JSON.parse(localStorage.getItem("user")) || {}
     }),
     actions: {
-      // setName(name) {
-      //   this.name = name;
-      //   localStorage.setItem("userName",name);
-      // },
-      // clearName() {
-      //   this.name = "";
-      //   localStorage.removeItem("userName");
-      // },
       setUser(user) {
-        localStorage.setItem( "user", JSON.stringify(user)
-        );
+        this.user = user; // Update the user data in the store
+        localStorage.setItem("user", JSON.stringify(user));
       },
       clearUser() {
+        this.user = {}; // Clear the user data in the store
         localStorage.removeItem("user");
+      },
+    },
+
+    getters: {
+      isLoggedIn: (state) => {
+        return state.user && state.user.username && state.user.userId && state.user.role;
       },
     },
   }

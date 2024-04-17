@@ -8,7 +8,7 @@
       <input v-model="password" name="password" type="text" class="input">
       <button class="btn" :disabled="loading">
         <span v-if="loading">
-          <CustomLoader /> <!-- Show the loader when loading is true -->
+          <CustomLoader />
         </span>
         <span v-else>
           Login
@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     async login() {
-      this.loading = true; // Set loading to true when login starts
+      this.loading = true;
 
       const url = '/api/v1/auth/login';
       const data = {
@@ -52,40 +52,15 @@ export default {
         const response = await fetch(url, requestOptions);
         const result = await response.json();
         if (response.ok) {
-          // Set cookies in document.cookie
-          // document.cookie = `accessToken=${result.accessToken}; path=/`;
-          // document.cookie = `refreshToken=${result.refreshToken}; path=/`;
-
-          // // Retrieve cookies from document.cookie
-          // const cookies = document.cookie.split(';');
-          // let accessToken = '';
-          // let refreshToken = '';
-
-          // cookies.forEach(cookie => {
-          //   const [name, value] = cookie.trim().split('=');
-          //   if (name === 'accessToken') {
-          //     accessToken = value;
-          //   } else if (name === 'refreshToken') {
-          //     refreshToken = value;
-          //   }
-          // });
-
-          this.user = {
+          const user = {
             username: result.user.name,
             userId: result.user.userId,
-            // accessToken: accessToken,
-            // refreshToken: refreshToken
+            role: result.user.role
           };
-          // localStorage.setItem('user', JSON.stringify(this.user));
-          useUserStore().setUser(this.user);
-          // useUserStore().setUser({ username: result.user.name });
+          useUserStore().setUser(user);
 
           const redirectPath = this.$route.query.redirect || '/protected';
-          // this.$router.push(redirectPath);
-          this.$router.push(redirectPath).catch(() => {
-            // Handle navigation errors, e.g., invalid route
-            this.$router.push('/protected');
-          });
+          this.$router.push(redirectPath);
         } else {
           const redirectPath = this.$route.query.redirect || '/failed';
           this.$router.push(redirectPath);
@@ -93,7 +68,7 @@ export default {
       } catch (error) {
         console.error(error);
       } finally {
-        this.loading = false; // Set loading back to false after login completes
+        this.loading = false;
       }
     }
   },
@@ -105,12 +80,6 @@ export default {
 
 <style lang="scss">
 .login {
-  // width: 384px;
-  // height: 520px;
-  // position: relative;
-  // display: flex;
-  // justify-content: center;
-  // margin: auto;
   @include inTheMiddle;
   .form {
     width: 384px;
