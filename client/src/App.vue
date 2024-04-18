@@ -19,6 +19,7 @@
 import TheUtils from '@/components/TheUtils.vue'
 import TheNavigation from '@/components/TheNavigation.vue'
 </script>
+
 <style lang="scss">
 .register-btn,
 .login-btn {

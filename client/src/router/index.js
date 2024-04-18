@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, useRoute } from 'vue-router'
 import Home from "@/views/Home.vue";
+// import sourceData from "@/data.json";
 
 const routes = [
   {
@@ -41,11 +42,64 @@ const routes = [
     component: () =>
       import("@/views/Login.vue"),
   },
+
   {
-    path: '/user/verify-email',
-    name: 'verifyEmail',
-    component: import("@/components/VerifyEmail.vue"),
-    props: (route) => ({ token: route.query.token, email: route.query.email })
+    path: "/destination/:id/:slug",
+    name: "destination.show",
+    component: () =>
+      import(
+        "@/views/DestinationShow.vue"
+      ),
+    props: (route) => ({
+      ...route.params,
+      id: parseInt(route.params.id),
+    }),
+    beforeEnter(to, from) {
+      const exists =
+        sourceData.destinations.find(
+          (destination) =>
+            destination.id ===
+            parseInt(to.params.id)
+        );
+      if (!exists)
+        return {
+          name: "NotFound",
+          // allows keeping the URL while rendering a different page
+          params: {
+            pathMatch: to.path
+              .split("/")
+              .slice(1),
+          },
+          query: to.query,
+          hash: to.hash,
+        };
+    },
+    children: [
+      // {
+      //   path: ":experienceSlug",
+      //   name: "experience.show",
+      //   component: () =>
+      //     import(
+      //       "@/views/ExperienceShow.vue"
+      //     ),
+      //   props: (route) => ({
+      //     ...route.params,
+      //     id: parseInt(route.params.id),
+      //   }),
+      // },
+    ],
+  },
+
+  {
+    path: "/user/verify-email",
+    name: "verifyEmail",
+    component: import(
+      "@/components/VerifyEmail.vue"
+    ),
+    props: (route) => ({
+      token: route.query.token,
+      email: route.query.email,
+    }),
   },
   {
     // path: "/:catchAll(.*)",
