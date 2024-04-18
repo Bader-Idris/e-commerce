@@ -1,0 +1,2 @@
+import{_ as u,c as l,a as e,t as a,b as c,w as i,r as d,o as _}from"./index-BojetKus.js";const m={data(){return{username:window.user}},methods:{logout(){//! fix it
+window.user=null,this.$router.push({name:"Home",query:{logout:null}})}}},p=e("button",null,"Invoices",-1);function f(g,o,w,h,n,t){const r=d("router-link");return _(),l("div",null,[e("h1",null,"Greetings, "+a(n.username),1),e("button",{onClick:o[0]||(o[0]=(...s)=>t.logout&&t.logout(...s))},"Logout"),c(r,{to:{name:"invoices"}},{default:i(()=>[p]),_:1})])}const v=u(m,[["render",f]]);export{v as default};

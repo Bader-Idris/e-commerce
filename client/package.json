@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
   },
@@ -36,24 +38,25 @@
     "pinia": "^2.1.7",
     "sweetalert2": "^11.6.13",
     "vidstack": "^1.10.9",
-    "vue": "^3.4.23",
     "vue-router": "^4.2.5",
     "vue3-toastify": "^0.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.7",
-    "@babel/eslint-parser": "^7.23.3",
-    "@babel/preset-env": "^7.23.8",
+    "@babel/core": "^7.24.4",
+    "@babel/eslint-parser": "^7.24.1",
+    "@babel/preset-env": "^7.24.4",
     "@rushstack/eslint-patch": "^1.3.3",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/compiler-sfc": "^3.4.18",
     "@vue/eslint-config-prettier": "^8.0.0",
     "autoprefixer": "^10.4.17",
-    "eslint": "^8.56.0",
+    "cypress": "^13.7.3",
+    "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.20.1",
-    "prettier": "^3.0.3",
-    "sass": "^1.70.0",
-    "vite": "^5.2.9"
+    "prettier": "^3.2.5",
+    "sass": "^1.75.0",
+    "vite": "^5.2.9",
+    "vue": "^3.4.23"
   },
   "browserslist": [
     "defaults",
