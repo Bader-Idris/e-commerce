@@ -2,10 +2,14 @@
   <div class="login">
     <form class="form" @submit.prevent="login">
       <h1>Login</h1>
-      <label for="email">email</label>
-      <input v-model="email" name="email" type="text" class="input">
-      <label for="password">Password</label>
-      <input v-model="password" name="password" type="text" class="input">
+      <div class="input-container">
+        <label for="email">Email</label>
+        <input v-model="email" name="email" type="text" class="input" aria-labelledby="email">
+      </div>
+      <div class="input-container">
+        <label for="password">Password</label>
+        <input v-model="password" name="password" type="password" class="input" aria-labelledby="password">
+      </div>
       <button class="btn" :disabled="loading">
         <span v-if="loading">
           <CustomLoader />
@@ -24,7 +28,6 @@ import { useUserStore } from '@/stores/UserNameStore';
 import { ref } from 'vue';
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import { useRoute } from 'vue-router';
 
 const email = ref('');
 const password = ref('');
@@ -96,15 +99,22 @@ const login = async () => {
     @include softForm;
     h1 {
       text-align: center;
+      margin-bottom: 50px;
     }
-
-    .input {
-      border: 1px solid gray;
-      padding: 10px;
+    .input-container {
+      display: flex;
+      flex-direction: column;
       margin-bottom: 20px;
-      border-radius: 5px;
-    }
 
+      label {
+        margin-bottom: 5px;
+      }
+      .input {
+        border: 1px solid gray;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    }
     .btn {
       padding: 10px 20px;
       background-color: #007bff;
@@ -116,6 +126,7 @@ const login = async () => {
       font-size: 20px;
       letter-spacing: 1px;
       text-transform: uppercase;
+      margin-top: 50px;
       span {
         display: flex;
         justify-content: center;
@@ -125,4 +136,5 @@ const login = async () => {
     }
   }
 }
+
 </style>
