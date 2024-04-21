@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, useRoute } from 'vue-router'
 import Home from "@/views/Home.vue";
 // import sourceData from "@/data.json";
+import sourceData from "@/destinations.json";
 
 const routes = [
   {
@@ -44,7 +45,8 @@ const routes = [
   },
 
   {
-    path: "/destination/:id/:slug",
+    // path: "/destination/:id/:slug",
+    path: "/pages/:id/:slug",
     name: "destination.show",
     component: () =>
       import(

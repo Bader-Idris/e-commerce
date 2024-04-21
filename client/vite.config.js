@@ -10,6 +10,9 @@ import autoprefixer from "autoprefixer";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  //! for electron 3 lines
+  //! import curDirPath, then 👇
+  //! base: path.solve(_dirname ,"dist"),
   plugins: [vue()],
   // plugins: [
   //   vue({//! for using vidStack

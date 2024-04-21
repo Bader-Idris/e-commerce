@@ -7,6 +7,10 @@
           :to="{ name: 'destination.show', params: { id: destination.id, slug: destination.slug } }">
           {{ destination.name }}
         </AppLink>
+        <!-- <AppLink v-for="destination in destinations" :key="destination.id"
+          :to="{ name: 'destination.show' }">
+          {{ destination.name }}
+        </AppLink> -->
       </ul>
       <!-- <AppLink :to="{ name: 'protected' }">Dashboard</AppLink> -->
       <div class="cart">
@@ -44,12 +48,48 @@ export default {
     ul > a {
       margin: 10px;
       color: #333;
+      padding: 20px 10px;
+      // &:hover::before {
+      //   content: "";
+      //   width: 100%;
+      //   height: 100%;
+      //   opacity: 0.7;
+      //   background-color: yellow;
+      // }
+      &:hover a::before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        opacity: 0.7;
+        background-color: yellow;
+      }
     }
     .cart {
       margin: 10px;
       padding: 20px;
-      i.purple {
+      position: relative;
+      width: 60px;
+      height: 100%;
+      cursor: pointer;
+      &:hover::before {
+        content: "";
+        position: absolute;
+        background: #22222251;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        transition: 0 0 0 0 0;
+        top: -4px;
+        left: 11px;
+      }
+      i {
+        position: absolute;
+        font-size: 25px;
+        color: #007acc;
+        line-height: 0;
+        &.purple {
         color: #9c27b0;
+        }
       }
     }
   }

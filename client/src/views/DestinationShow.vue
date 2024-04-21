@@ -21,7 +21,8 @@
   </div>
 </template>
 <script>
-import sourceData from "@/data.json";
+// import sourceData from "@/data.json";
+import sourceData from "@/destinations.json";
 // import ExperienceCard from "@/components/ExperienceCard.vue";
 // import GoBack from '@/components/GoBack.vue'
 export default {
