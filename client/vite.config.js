@@ -1,7 +1,5 @@
-import {
-  fileURLToPath,
-  URL,
-} from "node:url";
+import { fileURLToPath, URL } from "node:url";
+// import path from "node:path";
 
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
@@ -12,7 +10,7 @@ import autoprefixer from "autoprefixer";
 export default defineConfig({
   //! for electron 3 lines
   //! import curDirPath, then 👇
-  //! base: path.solve(_dirname ,"dist"),
+  // base: path.join(__dirname, "dist/"),
   plugins: [vue()],
   // plugins: [
   //   vue({//! for using vidStack
@@ -27,54 +25,49 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "./src/assets/scss/main.scss";`,
-      },
+        additionalData: `@import "./src/assets/scss/main.scss";`
+      }
     },
     postcss: {
       plugins: [
         autoprefixer({
           overrideBrowserslist: [
-            "defaults",
-            "last 2 versions",
-            "Opera >= 12",
-            "Edge >= 12",
-            "Firefox >= 20",
+            'defaults',
+            'last 2 versions',
+            'Opera >= 12',
+            'Edge >= 12',
+            'Firefox >= 20'
           ],
-          grid: "stable",
-          flexbox: "modern",
-          cascade: false,
-        }),
-      ],
-    },
+          grid: 'stable',
+          flexbox: 'modern',
+          cascade: false
+        })
+      ]
+    }
   },
   resolve: {
     alias: {
-      "@": fileURLToPath(
-        new URL(
-          "./src",
-          import.meta.url
-        )
-      ),
-    },
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
   },
   server: {
     //! check if it's useful!
     proxy: {
-      "/api": {
-        target: "http://localhost:5000",
+      '/api': {
+        target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
-        ws: true,
-      },
-    },
+        ws: true
+      }
+    }
   },
   esbuild: {
     //for Babel
-    jsxFactory: "h",
-    jsxFragment: "Fragment",
-    jsxInject: `import { h, Fragment } from 'vue'`,
+    jsxFactory: 'h',
+    jsxFragment: 'Fragment',
+    jsxInject: `import { h, Fragment } from 'vue'`
   },
   optimizeDeps: {
-    include: ["@babel/preset-env"],
-  },
-});
+    include: ['@babel/preset-env']
+  }
+})

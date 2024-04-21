@@ -13,7 +13,7 @@
         </AppLink> -->
       </ul>
       <!-- <AppLink :to="{ name: 'protected' }">Dashboard</AppLink> -->
-      <div class="cart">
+      <div class="cart" @click="goToCart">
         <i class="far fa-shopping-cart"></i>
       </div>
       <!-- <AppLink to="https://vueschool.io">Vue School</AppLink> -->
@@ -27,6 +27,11 @@ export default {
   data() {
     return {
       destinations: sourceData.destinations
+    }
+  }, 
+  methods: {
+    goToCart() {
+      this.$router.push({ name: 'cart' })
     }
   }
 }
@@ -71,16 +76,28 @@ export default {
       width: 60px;
       height: 100%;
       cursor: pointer;
+      transition: opacity 0.3s ease;
       &:hover::before {
         content: "";
         position: absolute;
-        background: #22222251;
+        background-color: hsl(214 30% 32% / .2);
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        transition: 0 0 0 0 0;
         top: -4px;
         left: 11px;
+      }
+      &::after {
+        content: "0";
+        background: #007acc;
+        width: 25px;
+        height: 18px;
+        position: absolute;
+        top: 0;
+        left: 60%;
+        border-radius: 10px;
+        text-align: center;
+        color: white;
       }
       i {
         position: absolute;

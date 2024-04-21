@@ -1,8 +1,12 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('node:path')
+import { app, BrowserWindow } from "electron";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const pathName = new URL(import.meta.url).pathname;
+const directoryPath = decodeURIComponent(fileURLToPath(new URL(pathName).pathname));
 
 const createWindow = () => {
   // Create the browser window.
@@ -10,12 +14,12 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(directoryPath, 'preload.js')
     }
-  })
+  });
 
   // and load the index.html of the app.
-  mainWindow.loadFile('dist/index.html')//! electron dist folder
+  mainWindow.loadFile(path.join(directoryPath, "index.html"));//! electron dist folder
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

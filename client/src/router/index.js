@@ -38,6 +38,12 @@ const routes = [
       import("@/views/Login.vue"),
   },
   {
+    path: "/cart",
+    name: "cart",
+    component: () =>
+      import("@/views/Cart.vue"),
+  },
+  {
     //! check its meaning
     path: "/example/:id(\\d+)?",
     component: () =>
