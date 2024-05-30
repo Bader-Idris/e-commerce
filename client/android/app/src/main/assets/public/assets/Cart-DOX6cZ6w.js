@@ -1,0 +1,1 @@
+import{_ as a,c as e,a as r,t as s,o as c}from"./index-bW6KImGH.js";const o={data(){return{cart:"Your Cart Is Empty"}}},n={class:"cart-view"};function _(p,d,i,l,t,u){return c(),e("div",n,[r("p",null,s(t.cart),1)])}const m=a(o,[["render",_],["__scopeId","data-v-dca539b8"]]);export{m as default};

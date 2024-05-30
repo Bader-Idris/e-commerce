@@ -5,6 +5,7 @@ const crypto = require('crypto');
 // and fix the jwt file in this though
 //! for hashing and salting, we need to fix the /models/mongo/User schema file,
 //! and get the properties from above mentioned file
+//? john uses great practice as hash(password, salt) after all
 const hashString = (string) =>
   crypto.createHash('md5').update(string).digest('hex');
 

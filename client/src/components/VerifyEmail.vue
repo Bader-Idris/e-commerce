@@ -11,10 +11,22 @@
 <script>
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import { useRoute } from 'vue-router';
 
 export default {
-  data() {
+  setup() {
+    const route = useRoute();
+    const email = route.query.email;
+    const token = route.query.token;
+
+    if (!email || !token) {
+      console.error("Email or token query parameters are missing");
+      return;
+    }
+
     return {
+      email,
+      token,
       seconds: 10,
       verified: false,
     };
@@ -37,8 +49,8 @@ export default {
       myHeaders.append("Content-Type", "application/json");
 
       const raw = JSON.stringify({
-        "email": this.$route.query.email,
-        "verificationToken": this.$route.query.token
+        "email": this.email,
+        "verificationToken": this.token
       });
 
       const requestOptions = {
@@ -52,21 +64,25 @@ export default {
         const response = await fetch("/api/v1/auth/verify-email", requestOptions);
         if (response.status === 200) {
           const result = await response.json();
-          console.log(result); // You can handle the result as needed
-          this.verified = true; // Update the verified status based on the result
+          this.verified = true;
+          console.log(result);
+          toast("Email verified successfully", {
+            theme: "dark",
+            type: "success",
+            dangerouslyHTMLString: true
+          });
         } else if (response.status === 401) {
           const errorData = await response.json();
-          // Display toast notification with the error message
           toast(errorData.msg, {
             theme: "dark",
             type: "error",
             dangerouslyHTMLString: true
           });
-          this.verified = false; // Update the verified status based on the error
+          this.verified = false;
         }
       } catch (error) {
         console.error(error);
-        this.verified = false; // Update the verified status based on the error
+        this.verified = false;
       }
     }
   }

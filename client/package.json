@@ -3,7 +3,7 @@
   "version": "0.0.5",
   "private": true,
   "type": "module",
-  "main":"main.js",
+  "main": "main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -40,12 +40,14 @@
     "@capacitor/status-bar": "^6.0.0",
     "@capacitor/text-zoom": "^6.0.0",
     "@capacitor/toast": "^6.0.0",
+    "animate.css": "^4.1.1",
     "d3": "^7.9.0",
     "particles.js": "^2.0.0",
     "pinia": "^2.1.7",
     "sweetalert2": "^11.6.13",
     "vidstack": "^1.10.9",
     "vue-router": "^4.2.5",
+    "vue": "^3.4.23",
     "vue3-toastify": "^0.2.1"
   },
   "devDependencies": {
@@ -64,8 +66,7 @@
     "eslint-plugin-vue": "^9.20.1",
     "prettier": "^3.2.5",
     "sass": "^1.75.0",
-    "vite": "^5.2.9",
-    "vue": "^3.4.23"
+    "vite": "^5.2.9"
   },
   "browserslist": [
     "defaults",
