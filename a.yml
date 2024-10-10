@@ -9,6 +9,8 @@ services:
       - "5000:80"
     volumes:
       - ./client/dist:/usr/share/nginx/html:ro
+      # this 👇 is added via GPT4, is it useful to make it in both a && b compose files?
+      - ./server/config/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - app
   app:
@@ -21,6 +23,7 @@ services:
       - PORT=3000
     depends_on:
       - mongo
+      # - psql_master
   mongo:
     image: mongo:4.4
     container_name: mongo
@@ -44,21 +47,72 @@ services:
       # - ./redis-server /usr/local/etc/redis/redis.conf
       # - redis-server AUTH default myPassword
       # - AUTH default myPassword
-  postgres:
-    image: postgres:16-alpine3.18
-    container_name: psql
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: example
-      POSTGRES_DB: articles
-    volumes:
-      - psql-data:/var/lib/postgresql/data:rw  # 🔴chmod +x if (node.length > 1)🔴
-      - ./server/config/psql/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+
+    #! added by chatGPT, check it out
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass myPassword
+
+
+  # postgres:
+  #   image: postgres:16-alpine3.18
+  #   #! An important concept is using master/slave duplication
+  #   #? master => insert update delete && slaves => read
+  #   #! or even multi-master or other concepts to handle DB high requests
+  #   container_name: psql
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: example
+  #     POSTGRES_DB: articles
+  #   volumes:
+  #     - psql-data:/var/lib/postgresql/data:rw  # 🔴chmod +x if (node.length > 1)🔴
+  #     - ./server/config/psql/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+
   # adminer:  # i think it's not important to have
   #   image: adminer
   #   restart: always
   #   ports:
   #     - 8080:8080
+
+  psql_master:
+    image: postgres:16-alpine3.18
+    container_name: psql_master
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: articles
+      POSTGRES_USER: postgres
+      REPLICATION_USER: rep_user
+      REPLICATION_PASSWORD: rep_pass
+    volumes:
+      - psql-master-data:/var/lib/postgresql/data:rw
+      - ./server/config/psql/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./server/config/psql/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf:ro
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+
+
+  psql_slave:
+    image: postgres:16-alpine3.18
+    container_name: psql_slave
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: postgres
+      REPLICATION_USER: rep_user
+      REPLICATION_PASSWORD: rep_pass
+      POSTGRES_DB: articles
+    volumes:
+      - psql-slave-data:/var/lib/postgresql/data:rw
+    depends_on:
+      - psql_master
+    command: |
+      bash -c "
+      until pg_basebackup -h psql_master -D /var/lib/postgresql/data -U rep_user -vP -W; do
+        echo 'Waiting for master to connect...'
+        sleep 1
+      done &&
+      postgres -c config_file=/var/lib/postgresql/data/postgresql.conf
+      "
+
+
 volumes:
   mongo-db:
   psql-data:

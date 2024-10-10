@@ -7,6 +7,6 @@ const crypto = require('crypto');
 //! and get the properties from above mentioned file
 //? john uses great practice as hash(password, salt) after all
 const hashString = (string) =>
-  crypto.createHash('md5').update(string).digest('hex');
+  crypto.createHash('md5').update(string).digest('hex');//! md5 and SHA-11 should not be used, Sahn Lam
 
 module.exports = hashString;
